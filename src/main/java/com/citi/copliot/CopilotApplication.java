@@ -9,14 +9,12 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @ComponentScan(basePackages = {"com.citi.copliot"})
-public class CopliotApplication {
+public class CopilotApplication {
 
     public static void main(String[] args)		{
 
         CsvUtil.initialHolidays();
-        SpringApplication.run(CopliotApplication.class, args);
+        SpringApplication.run(CopilotApplication.class, args);
     }
-
-
 
 }
