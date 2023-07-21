@@ -79,16 +79,30 @@ public class CsvUtil {
         }
 
         ArrayList<Holiday> alldata = new ArrayList<Holiday>();
-        //随机生成holiday30个对象 用于测试
-        for (int i = 0; i < 30; i++) {
+        //随机生成holiday个对象 用于测试
+        for (int i = 0; i < 20; i++) {
             Holiday holiday = new Holiday();
             holiday.setCountryCode("countryCode" + i);
             holiday.setCountryDesc("countryDesc" + i);
             holiday.setHolidayCode("holidayCode" + i);
-            holiday.setHolidayDate(new Date());
+            //生成随机的日期
+            Date date = new Date();
+            date = new Date(date.getTime() + (long) (Math.random() * 1000000000));
+            holiday.setHolidayDate(date);
             alldata.add(holiday);
         }
 
+        for (int i = 0; i < 10; i++) {
+            Holiday holiday = new Holiday();
+            holiday.setCountryCode("countryCode" + i);
+            holiday.setCountryDesc("countryDesc" + i);
+            holiday.setHolidayCode("holidayCode" + i);
+            //生成随机的日期
+            Date date = new Date();
+            date = new Date(date.getTime() + (long) (Math.random() * 1000000000));
+            holiday.setHolidayDate(date);
+            alldata.add(holiday);
+        }
         CsvUtil.write(alldata, "test.csv");
 
     }
