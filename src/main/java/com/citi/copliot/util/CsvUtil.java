@@ -3,11 +3,9 @@ package com.citi.copliot.util;
 import com.citi.copliot.domain.Holiday;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class CsvUtil {
     public static void write(ArrayList<Holiday> data, String path) {
@@ -15,18 +13,24 @@ public class CsvUtil {
 
         try {
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
-            for (int i = 0; i < data.size(); i++) {
-                Holiday onerow = data.get(i);
-                //write onerow 所有的属性 用逗号隔开
-                out.write(DelQuota(onerow.getCountryCode()));
-                out.write(",");
-                out.write(DelQuota(onerow.getCountryDesc()));
-                out.write(",");
-                out.write(DelQuota(onerow.getHolidayCode()));
-                out.write(",");
-                out.write(DelQuota(String.valueOf(onerow.getHolidayDate())));
-                out.write(",");
-                out.newLine();
+            if (data != null && data.size() > 0) {
+                for (int i = 0; i < data.size(); i++) {
+                    Holiday onerow = data.get(i);
+                    //write onerow 所有的属性 用逗号隔开
+                    out.write(DelQuota(onerow.getCountryCode()));
+                    out.write(",");
+                    out.write(DelQuota(onerow.getCountryDesc()));
+                    out.write(",");
+                    out.write(DelQuota(onerow.getHolidayCode()));
+                    out.write(",");
+                    Date date= onerow.getHolidayDate();
+                    //将date转换为String
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String strDate = dateFormat.format(date);
+                    out.write(DelQuota(strDate));
+                    out.write(",");
+                    out.newLine();
+                }
             }
             out.flush();
             out.close();
@@ -59,8 +63,17 @@ public class CsvUtil {
                 holiday.setCountryCode(onerowlist.get(0));
                 holiday.setCountryDesc(onerowlist.get(1));
                 holiday.setHolidayCode(onerowlist.get(2));
-                Date date = new Date();
-                date = new SimpleDateFormat("yyyy-MM-dd").parse(onerowlist.get(3));
+
+                //将onerowlist.get(3)转换为Date类型
+                String dateStr = onerowlist.get(3);
+                //写一个"Mon Jul 24 165109 CST 2023"格式的Date Formatter
+                //列出所有的DateFormat格式
+
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("CST"));
+
+                Date date = dateFormat.parse(dateStr);
+
                 holiday.setHolidayDate(date);
                 alldata.add(holiday);
             }
@@ -97,13 +110,22 @@ public class CsvUtil {
             holiday.setCountryCode("countryCode" + i);
             holiday.setCountryDesc("countryDesc" + i);
             holiday.setHolidayCode("holidayCode" + i);
-            //生成随机的日期
+            //生成随机带DateFormat的日期 用于测试
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             date = new Date(date.getTime() + (long) (Math.random() * 1000000000));
+            String strDate = dateFormat.format(date);
+            try {
+                date = dateFormat.parse(strDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
             holiday.setHolidayDate(date);
             alldata.add(holiday);
         }
-        CsvUtil.write(alldata, "test.csv");
+        CsvUtil.write(alldata, "holiday.csv");
 
     }
 
